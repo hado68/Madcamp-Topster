@@ -1,0 +1,51 @@
+/* styles/Album.module.css */
+.albumPage {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+}
+
+.particleImageContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.backgroundImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.albumContent {
+  flex: 1;
+  padding: 20px;
+  color: white;
+  z-index: 1;
+}
+
+.trackList {
+  width: 300px;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  color: white;
+  overflow-y: auto;
+  z-index: 3;
+}
+
+.trackItem {
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.trackItem:hover {
+  color: #1db954;
+}
