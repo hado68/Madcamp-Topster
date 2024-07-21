@@ -1,15 +1,69 @@
 import { useSession, signIn } from 'next-auth/react';
-import Link from 'next/link';
-import { getAccessToken, getAlbums } from '../utils/spotify';
+import { useState, useEffect } from 'react';
+import { getAccessToken, searchAlbums, getAlbums } from '../utils/spotify';
 
-export default function Home({ albums }) {
+export default function Home() {
   const { data: session, status } = useSession();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [albums, setAlbums] = useState([]);
 
+  useEffect(() => {
+    if (status === 'authenticated') {
+      const fetchAlbums = async () => {
+        try {
+          const accessToken = session.accessToken;
+          const userAlbums = await getAlbums(accessToken);
+          setAlbums(userAlbums);
+        } catch (error) {
+          console.error('Failed to fetch albums:', error);
+        }
+      };
+      fetchAlbums();
+    }
+  }, [session, status]);
+
+  const handleSearch = async () => {
+    if (!searchTerm) return;
+    try {
+      const accessToken = session.accessToken;
+      if (!accessToken) {
+        console.error('Access token is missing'); // 추가 디버깅
+        return;
+      }
+      console.log('Access token for search:', accessToken); // 디버그 로그 추가
+      const results = await searchAlbums(accessToken, searchTerm);
+      setSearchResults(results);
+    } catch (error) {
+      console.error('Failed to search albums:', error);
+    }
+  };
+  const addAlbum = async (album) => {
+    try {
+      const response = await fetch('/api/albums', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ album: { id: album.id } }),
+      });
+
+      if (response.ok) {
+        console.log('Album added successfully');
+        // 새로 추가된 앨범을 앨범 목록에 추가합니다.
+        setAlbums([...albums, album]);
+      } else {
+        console.error('Failed to add album');
+      }
+    } catch (error) {
+      console.error('Failed to add album:', error);
+    }
+  };
   if (!albums) {
     return <p>Failed to load albums</p>;
   }
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
       <button
         onClick={() => signIn('spotify')}
         style={{
@@ -20,48 +74,55 @@ export default function Home({ albums }) {
           border: 'none',
           borderRadius: '25px',
           cursor: 'pointer',
+          margin: '20px',
         }}
       >
         Log in with Spotify
       </button>
-      {status == 'authenticated' && (
+
+      {status === 'authenticated' && (
         <div>
-        <h1>Album List</h1>
-        <ul>
-          {albums.map(album => (
-            <li key={album.id}>
-              <Link href={`/album/${album.id}`}>
+          <input
+            type="text"
+            placeholder="Search for an album"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              padding: '10px',
+              fontSize: '16px',
+              marginBottom: '10px',
+              width: '300px',
+            }}
+          />
+          <button
+            onClick={handleSearch}
+            style={{
+              padding: '10px 20px',
+              fontSize: '16px',
+              backgroundColor: '#1DB954',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '25px',
+              cursor: 'pointer',
+              marginBottom: '20px',
+            }}
+          >
+            Search
+          </button>
+          <div>
+            <h1>Search Results</h1>
+            <ul>
+              {searchResults.map((album) => (
+                <li key={album.id}>
                   <img src={album.images[0].url} alt={album.name} width="100" height="100" />
                   <p>{album.name}</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-        )}
+                  <button onClick={() => addAlbum(album)}>Add Album</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
-export async function getServerSideProps() {
-  try {
-    const accessToken = await getAccessToken();
-    const albumIds = ['68To0i66fYxVRRqf7fAh4i', '4SZko61aMnmgvNhfhgTuD3']; // Spotify 앨범 ID를 배열로 입력
-    const albums = await getAlbums(accessToken, albumIds);
-
-    // null 값을 필터링
-    const filteredAlbums = albums.filter(album => album !== null);
-
-    return {
-      props: {
-        albums: filteredAlbums,
-      },
-    };
-  } catch (error) {
-    console.error('Failed to fetch albums:', error);
-    return {
-      props: {
-        albums: null,
-      },
-    };
-  }
 }

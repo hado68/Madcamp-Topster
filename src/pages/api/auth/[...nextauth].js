@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
+import clientPromise from '../../../utils/mongodb';
 
 async function refreshAccessToken(token) {
   try {
@@ -42,26 +43,50 @@ export default NextAuth({
     SpotifyProvider({
       clientId: process.env.SPOTIFY_CLIENT_ID,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-      authorization: "https://accounts.spotify.com/authorize?scope=user-read-email,user-read-private,streaming,user-read-playback-state,user-modify-playback-state",
+      authorization: "https://accounts.spotify.com/authorize?scope=user-read-email,user-read-private,streaming,user-modify-playback-state",
     }),
   ],
   callbacks: {
     async jwt({ token, account, profile }) {
+      const client = await clientPromise;
+      const db = client.db();
+
       if (account) {
-        return {
-          accessToken: account.access_token,
-          accessTokenExpires: Date.now() + account.expires_in * 1000,
-          refreshToken: account.refresh_token,
-          user: profile,
-        };
+        try {
+          console.log('Profile:', profile); // 프로필 로그 추가
+          const existingUser = await db.collection('users').findOne({ email: profile.email });
+          const userId = existingUser ? existingUser._id : null;
+
+          if (!existingUser) {
+            await db.collection('users').insertOne({
+              email: profile.email,
+              name: profile.display_name || profile.name, // display_name 우선 사용
+              image: profile.images?.[0]?.url || profile.picture || '', // 이미지 우선 순위 사용
+              createdAt: new Date(),
+              albums: [],
+            });
+          }
+
+          return {
+            accessToken: account.access_token,
+            accessTokenExpires: Date.now() + account.expires_in * 1000,
+            refreshToken: account.refresh_token,
+            user: {
+              email: profile.email,
+              name: profile.display_name || profile.name, // display_name 우선 사용
+              image: profile.images?.[0]?.url || profile.picture || '', // 이미지 우선 순위 사용
+            },
+          };
+        } catch (error) {
+          console.error('Error during user lookup or creation:', error);
+          throw new Error('Error during user lookup or creation');
+        }
       }
 
-      // Return previous token if the access token has not expired yet
       if (Date.now() < token.accessTokenExpires) {
         return token;
       }
 
-      // Access token has expired, try to update it
       return refreshAccessToken(token);
     },
     async session({ session, token }) {
