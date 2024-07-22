@@ -223,7 +223,7 @@ const AlbumShelf = () => {
       }
 
       for (let i = firstRowAlbumNum; i < albumCovers.length; i++) {
-        const x = (canvas.width - shelfWidth) / 2 +  + (i % nextRowAlbumNum) * (albumWidth * albumShrinkFactor + 50);
+        const x = (canvas.width - shelfWidth) / 2 + 30 + (i % nextRowAlbumNum) * (albumWidth * albumShrinkFactor + 50);
         const y = shelfYPositions[Math.floor( (i - firstRowAlbumNum) / nextRowAlbumNum) + 1] - albumHeight * albumShrinkFactor - shelfDepth + 9; // 앨범 밑단이 선반 뒤로 가도록 조정
         albumPositions[i] = { x, y };
         drawAlbumCover(albumCovers[i], x, y, true);
