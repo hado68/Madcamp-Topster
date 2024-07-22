@@ -53,15 +53,14 @@ export default NextAuth({
 
       if (account) {
         try {
-          console.log('Profile:', profile); // 프로필 로그 추가
           const existingUser = await db.collection('users').findOne({ email: profile.email });
           const userId = existingUser ? existingUser._id : null;
 
           if (!existingUser) {
             await db.collection('users').insertOne({
               email: profile.email,
-              name: profile.display_name || profile.name, // display_name 우선 사용
-              image: profile.images?.[0]?.url || profile.picture || '', // 이미지 우선 순위 사용
+              name: profile.display_name || profile.name, 
+              image: profile.images?.[0]?.url || profile.picture || '', 
               createdAt: new Date(),
               albums: [],
             });
@@ -73,8 +72,8 @@ export default NextAuth({
             refreshToken: account.refresh_token,
             user: {
               email: profile.email,
-              name: profile.display_name || profile.name, // display_name 우선 사용
-              image: profile.images?.[0]?.url || profile.picture || '', // 이미지 우선 순위 사용
+              name: profile.display_name || profile.name, 
+              image: profile.images?.[0]?.url || profile.picture || '', 
             },
           };
         } catch (error) {
@@ -93,7 +92,6 @@ export default NextAuth({
       session.user = token.user;
       session.accessToken = token.accessToken;
       session.error = token.error;
-
       return session;
     },
   },
