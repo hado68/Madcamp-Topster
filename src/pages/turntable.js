@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import TurnTableComponent from '../components/TurnTable';
 
-export default function TurnTable() {
+const TurnTable = () => {
   return (
     <>
       <Head>
@@ -17,3 +17,4 @@ export default function TurnTable() {
     </>
   );
 }
+export default TurnTable;
