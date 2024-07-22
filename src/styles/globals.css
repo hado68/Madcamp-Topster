@@ -5,6 +5,14 @@
   font-style: normal;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* 스크롤 제거 */
+}
+
 body {
   margin: 0;
   padding: 0;
