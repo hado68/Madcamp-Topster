@@ -10,13 +10,8 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  box-sizing: border-box;
 }
 
 h1, h2 {
@@ -30,30 +25,43 @@ form {
   align-items: center; /* Center the form elements horizontally */
 }
 
-input.title-input {
+input.title-input, input.signin-input, input.signup-input {
   display: block;
-  margin-bottom: 10px;
-  padding: 5px 0;
+  margin: 0 auto 10px auto;
+  padding: 10px 20px;
   font-size: 16px;
   width: 100%;
-  max-width: 250px;
+  max-width: 300px;
   border: none;
-  border-bottom: 2px solid #ccc; /* Add bottom border for underline */
+  border-bottom: 2px solid #ccc;
   outline: none;
   box-sizing: border-box;
   transition: border-color 0.3s;
-  background-color: transparent; /* Remove background color */
+}
+
+input.title-input {
+  max-width: 250px;
   text-align: center; /* Center align text */
+  background-color: transparent; /* Remove background color */
+  padding: 5px 0;
 }
 
 input.title-input:focus {
   border-bottom-color: #000; /* Change color when focused */
 }
 
+input.signin-input:focus {
+  border-bottom-color: #007bff;
+}
+
+input.signup-input:focus {
+  border-bottom-color: #1e7e34;
+}
+
 textarea.content-textarea {
   display: block;
-  margin: 10px auto; /* Center horizontally */
-  padding: 3px 20px; /* Increase padding */
+  margin: 10px auto;
+  padding: 3px 20px;
   font-size: 16px;
   width: 100%;
   max-width: 600px;
@@ -64,7 +72,7 @@ textarea.content-textarea {
   transition: border-color 0.3s;
   background: repeating-linear-gradient(
     white,
-    white 29px, /* Adjust to move line down */
+    white 29px,
     #ccc 30px
   );
   font-family: 'Lucida Console', Monaco, monospace;
@@ -76,33 +84,19 @@ textarea.content-textarea:focus {
   border-color: #000;
 }
 
-input.signin-input, input.signup-input {
-  display: block;
-  margin: 0 auto 10px auto; /* Center horizontally */
-  padding: 10px 20px; /* Increase padding */
-  font-size: 16px;
-  width: 100%;
-  max-width: 300px;
-  border: none;
-  border-bottom: 2px solid #ccc;
-  border-radius: 0;
-  outline: none;
-  box-sizing: border-box;
-  transition: border-color 0.3s;
-}
-
-input.signin-input:focus {
-  border-bottom-color: #007bff;
-}
-
-input.signup-input:focus {
-  border-bottom-color: #1e7e34;
-}
-
 button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #0056b3;
 }
 
 ul {
@@ -136,7 +130,6 @@ small {
   color: #666;
 }
 
-/* Navbar styling */
 .navbar {
   width: 100%;
   background-color: #fff;
@@ -148,42 +141,39 @@ small {
   position: relative;
 }
 
-/* Container for centering the content */
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Full viewport height */
-  padding-top: 20px; /* Optional: Add top padding to create space */
+  min-height: 100vh;
+  padding-top: 20px;
 }
 
-/* Style for the content */
 .content {
   text-align: center;
   max-width: 600px;
   width: 100%;
   padding: 20px;
-  background-color: #fff; /* Optional: Add background color */
+  background-color: #fff;
 }
 
-/* Notebook style */
 .textarea-notebook-container {
   display: flex;
-  justify-content: center; /* Center horizontally */
-  margin-top: 20px; /* Add top margin to push the container down */
+  justify-content: center;
+  margin-top: 20px;
 }
 
 .textarea-notebook {
   background: repeating-linear-gradient(
     white,
-    white 29px, /* Adjust to move line down */
+    white 29px,
     #ccc 30px
   );
   font-family: 'Lucida Console', Monaco, monospace;
   line-height: 30px;
-  padding: 0px 10px 20px 0px; /* Add top and bottom padding */
-  border: 1px solid #ccc; /* Add border for the box */
-  border-radius: 5px; /* Round the corners */
+  padding: 0px 10px 20px 0px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
   width: 100%;
   max-width: 600px;
   height: 500px;
@@ -204,14 +194,20 @@ textarea:focus + .underline {
   background-color: #000;
 }
 
-/* Specific styles for Sign In form */
-.signin-container {
+.signin-container, .signup-container {
   max-width: 400px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.signin-container {
+  background-color: #f9f9f9;
+}
+
+.signup-container {
+  background-color: #e9ecef;
 }
 
 .signin-form input {
@@ -220,23 +216,6 @@ textarea:focus + .underline {
 
 .signin-form input:focus {
   border-bottom-color: #007bff;
-}
-
-.signin-form button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-}
-
-/* Specific styles for Sign Up form */
-.signup-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #e9ecef;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .signup-form input {
@@ -249,7 +228,8 @@ textarea:focus + .underline {
 
 .signup-form button {
   background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 4px;
+}
+
+.signup-form button:hover {
+  background-color: #218838;
 }

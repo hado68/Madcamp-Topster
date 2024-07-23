@@ -1,8 +1,19 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 350px;
+}
+
 .album-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-  padding: 20px;
+  padding: 20px 20px 20px 20px; 
+  background-image: url('/texture/bluewood.avif'); /* 배경 이미지 경로 */
+  background-size: cover; /* 이미지를 전체 영역에 맞게 조절 */
+  background-position: center; /* 이미지를 중앙에 배치 */
 }
 
 .album-grid-item {
@@ -20,7 +31,6 @@
 }
 
 .album-info {
-  margin-top: 10px;
   text-align: center;
 }
 

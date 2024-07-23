@@ -50,9 +50,6 @@ const AlbumGrid = ({ albums }) => {
             alt={album.name}
             className="album-image"
           />
-          <div className="album-info">
-            {album.name}
-          </div>
         </div>
       ))}
       {selectedAlbum && (
