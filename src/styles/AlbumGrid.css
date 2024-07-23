@@ -3,16 +3,24 @@
   flex-direction: row;
   align-items: flex-start;
   justify-content: center;
-  padding: 350px;
+  padding: 20px 437px 0px 113px;
+  height: 100vh; 
+  width: 100vw; 
+  box-sizing: border-box; /* Include padding in height calculation */
+  overflow: hidden; /* Prevent scrollbars */
+  background-image: url('/darkwood.svg');
+  background-size: cover; /* 이미지를 전체 영역에 맞게 조절 */
+  background-position: center; /* 이미지를 중앙에 배치 */
 }
 
 .album-grid {
   display: grid;
+  width: 100%;
   grid-template-columns: repeat(4, 1fr);
   row-gap: 20px; /* 위아래 간격 */
   column-gap: 24px; /* 좌우 간격 */
   padding: 20px 20px 20px 20px; 
-  background-image: url('/texture/woodshelf.svg');
+  background-image: url('/woodshelf.svg');
   background-size: cover; /* 이미지를 전체 영역에 맞게 조절 */
   background-position: center; /* 이미지를 중앙에 배치 */
 }
@@ -89,15 +97,7 @@
   max-height: 100%;
 }
 
-button {
-  margin-top: 10px;
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
+
 
 button:hover {
   background-color: #0056b3;
