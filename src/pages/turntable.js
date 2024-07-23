@@ -1,7 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
 import TurnTableComponent from '../components/TurnTable';
-
 const TurnTable = () => {
   return (
     <>
@@ -12,24 +11,20 @@ const TurnTable = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <TurnTableComponent />
-
       <main style={{
-        position: 'relative',
-        zIndex: 1,
-        color: 'white',
-        padding: '20px',
-        height: '100vh',
         display: 'flex',
-        flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '100%',
+        height: '100vh',
+        margin: 0,
+        padding: 0,
+        backgroundColor: '#f0f0f0',
+        overflow: 'hidden'
       }}>
-        <h1>Welcome to Album Shelf</h1>
-        <p>Explore your music collection in a new way!</p>
+        <TurnTableComponent />
       </main>
     </>
   );
 }
-
 export default TurnTable;
