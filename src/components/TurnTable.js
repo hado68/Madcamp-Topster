@@ -64,60 +64,20 @@ const TurnTableComponent = () => {
       const ctx = canvas.getContext('2d');
       ctx.scale(pixelRatio, pixelRatio);
 
-      ctx.fillStyle = '#252b2e';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
       const images = loadImages();
       
       // Polygon의 크기와 위치를 상대적으로 계산
-    const polygonSize = Math.min(stageWidth, stageHeight); // 화면의 100%
-    const polygonX = stageWidth / 20;
-    const polygonY = stageHeight / 2;
+      const polygonSize = Math.min(stageWidth, stageHeight) * 0.8; // 화면의 80%
+      const polygonX = stageWidth / 2;
+      const polygonY = stageHeight / 2;
     
-    polygon = new Polygon(polygonX, polygonY, polygonSize, 16, images);
+      polygon = new Polygon(polygonX, polygonY, polygonSize, 16, images);
     }
   };
 
-  const drawWave = (ctx, img, x, y, width, height) => {
-    const amplitude = 10000; // 물결의 진폭
-    const frequency = 0.7; // 물결의 주파수
-
-    // 흑백 이미지 그리기
-    ctx.save();
-    ctx.filter = 'grayscale(20%) blur(8px)';
-    ctx.drawImage(img, x, y, width, height);
-    ctx.restore();
-
-    // 그라디언트를 적용할 경로를 만듭니다.
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-
-    for (let i = 0; i <= width; i++) {
-        const dy = (amplitude * Math.sin((i * frequency) + time) < height / 5) ? 0 : height;
-        ctx.lineTo(x + i, y + dy);
-    }
-
-    ctx.lineTo(x + width, y + height);
-    ctx.lineTo(x, y + height);
-    ctx.closePath();
-    ctx.clip();
-
-    ctx.save();
-    ctx.drawImage(img, x, y, width, height);
-    ctx.restore();
-
-    // 색상 그라디언트 적용
-    const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
-    gradient.addColorStop(1, 'rgba(0, 0, 255, 0.2)');
-
-    ctx.save();
-    ctx.fillStyle = gradient;
-    ctx.globalCompositeOperation = 'overlay';
-    ctx.fill();
-    ctx.restore();
-
-    ctx.restore();
+  const drawBackground = (ctx) => {
+    ctx.fillStyle = '#252b2e';
+    ctx.fillRect(0, 0, ctx.canvas.width / pixelRatio, ctx.canvas.height / pixelRatio);
   };
 
   const drawfilmWheel = (ctx, rotation) => {
@@ -168,35 +128,12 @@ const TurnTableComponent = () => {
       const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, canvas.width / pixelRatio, canvas.height / pixelRatio);
 
-      if (polygon && polygon.backgroundImage) {
-        const img = polygon.backgroundImage;
-        const imgAspectRatio = img.width / img.height;
-        const canvasWidth = canvas.width / pixelRatio;
-        const canvasHeight = canvas.height / pixelRatio;
-
-        let drawWidth, drawHeight;
-
-        drawWidth = canvasWidth * 0.5;
-        drawHeight = drawWidth / imgAspectRatio;
-
-        const x = (canvasWidth - drawWidth) / 2;
-        const y = (canvasHeight - drawHeight) / 2;
-
-        ctx.filter = 'blur(8px)';
-        drawWave(ctx, img, x, y, drawWidth, drawHeight);
-        ctx.filter = 'none';
-
-        time += 0.05;
-      } else {
-        ctx.fillStyle = '#252b2e';
-        ctx.fillRect(0, 0, canvas.width / pixelRatio, canvas.height / pixelRatio);
-      }
+      drawBackground(ctx);
 
       moveX *= 0.85;
       moveY *= 0.85;
 
       if (polygon) {
-        
         polygon.animate(ctx, moveX, moveY);
         filmWheelRotation = -polygon.rotate; // polygon의 rotate 값을 사용
         drawfilmWheel(ctx, filmWheelRotation);
@@ -246,7 +183,16 @@ const TurnTableComponent = () => {
     }
   }, []);
 
-  return <canvas ref={canvasRef} style={{ display: 'block' }} />;
+  return (
+    <canvas ref={canvasRef} style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      zIndex: -1
+    }} />
+  );
 };
 
 export default TurnTableComponent;

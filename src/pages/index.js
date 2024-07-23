@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { getAccessToken, searchAlbums, getAlbums } from '../utils/spotify';
 import AlbumGrid from '../components/AlbumGrid';
 import Album from './album/[id]';
+import AlbumShelf from '@/components/AlbumShelf';
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -80,59 +81,65 @@ export default function Home() {
       </button>
 
       {status === 'authenticated' && (
-        <div>
-          <input
-            type="text"
-            placeholder="Search for an album"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{
-              padding: '10px',
-              fontSize: '16px',
-              marginBottom: '10px',
-              width: '300px',
-            }}
-          />
-          <button
-            onClick={handleSearch}
-            style={{
-              padding: '10px 20px',
-              fontSize: '16px',
-              backgroundColor: '#1DB954',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '25px',
-              cursor: 'pointer',
-              marginBottom: '20px',
-            }}
-          >
-            Search
-          </button>
-          <div>
-            <h1>Search Results</h1>
-            <ul>
-              {searchResults.map((album) => (
-                <li key={album.id} style={{ listStyle: 'none', marginBottom: '10px' }}>
-                  <img src={album.images[0].url} alt={album.name} width="100" height="100" />
-                  <p>{album.name}</p>
-                  <button onClick={() => addAlbum(album)} style={{
-                    padding: '5px 10px',
-                    fontSize: '14px',
-                    backgroundColor: '#1DB954',
-                    color: '#fff',
-                    border: 'none',
-                    borderRadius: '15px',
-                    cursor: 'pointer',
-                  }}>
-                    Add Album
-                  </button>
-                </li>
-              ))}
-            </ul>
+        <div className="container">
+          <div className="search-section">
+            <input
+              type="text"
+              placeholder="Search for an album"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                padding: '10px',
+                fontSize: '16px',
+                marginBottom: '10px',
+                width: '300px',
+              }}
+            />
+            <button
+              onClick={handleSearch}
+              style={{
+                padding: '10px 20px',
+                fontSize: '16px',
+                backgroundColor: '#1DB954',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '25px',
+                cursor: 'pointer',
+                marginBottom: '20px',
+              }}
+            >
+              Search
+            </button>
+            <div>
+              <h1>Search Results</h1>
+              <ul>
+                {searchResults.map((album) => (
+                  <li key={album.id} style={{ listStyle: 'none', marginBottom: '10px' }}>
+                    <img src={album.images[0].url} alt={album.name} width="100" height="100" />
+                    <p>{album.name}</p>
+                    <button
+                      onClick={() => addAlbum(album)}
+                      style={{
+                        padding: '5px 10px',
+                        fontSize: '14px',
+                        backgroundColor: '#1DB954',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '15px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Add Album
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-          <div>
+          <div className="album-section">
             <h1>Your Albums</h1>
             <AlbumGrid albums={albums} />
+            <AlbumShelf/>
           </div>
         </div>
       )}

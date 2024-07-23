@@ -12,18 +12,21 @@ const TurnTable = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <TurnTableComponent />
+
       <main style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
+        position: 'relative',
+        zIndex: 1,
+        color: 'white',
+        padding: '20px',
         height: '100vh',
-        margin: 0,
-        padding: 0,
-        backgroundColor: '#f0f0f0',
-        overflow: 'hidden'
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
       }}>
-        <TurnTableComponent />
+        <h1>Welcome to Album Shelf</h1>
+        <p>Explore your music collection in a new way!</p>
       </main>
     </>
   );
