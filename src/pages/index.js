@@ -182,11 +182,12 @@ export default function Home() {
                 ))}
               </ul>
             </div>
+          </div>
+          <div className="album-section">
+            <h1>Your Albums</h1>
+            <AlbumGrid albums={albums} />
+          </div>
           )}
-        </div>
-        <div className="album-section">
-          <h1>Your Albums</h1>
-          <AlbumGrid albums={albums} />
         </div>
       </div>
     </div>
