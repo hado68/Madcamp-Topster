@@ -1,30 +1,11 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Polygon } from './Polygon';
-
-const IMAGE_URLS = [
-  '/albums/cover1.jpg',
-  '/albums/cover2.jpg',
-  '/albums/cover3.jpg',
-  '/albums/cover4.jpg',
-  '/albums/cover5.jpg',
-  '/albums/cover6.jpg',
-  '/albums/cover1.jpg',
-  '/albums/cover2.jpg',
-  '/albums/cover3.jpg',
-  '/albums/cover4.jpg',
-  '/albums/cover5.jpg',
-  '/albums/cover6.jpg',
-  '/albums/cover1.jpg',
-  '/albums/cover2.jpg',
-  '/albums/cover3.jpg',
-  '/albums/cover4.jpg',
-  '/albums/cover5.jpg',
-  '/albums/cover6.jpg'
-];
 
 const TurnTableComponent = () => {
   const canvasRef = useRef(null);
   const pixelRatio = typeof window !== 'undefined' && window.devicePixelRatio > 1 ? 2 : 1;
+  const [albums, setAlbums] = useState([]);
+  const [imageUrls, setImageUrls] = useState([]);
 
   let isDown = false;
   let moveX = 0;
@@ -35,9 +16,25 @@ const TurnTableComponent = () => {
   let filmWheelImage = null;
   let projectorImage = null;
   let filmWheelRotation = 0;
-
-  // 물결 효과를 위한 변수
   let time = 0;
+
+  useEffect(() => {
+    // Fetch albums data from Spotify API
+    fetch('/api/albums')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch albums');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setAlbums(data.albums || []);
+        // Extract image URLs from albums
+        const urls = data.albums.slice(0, 18).map(album => album.images[0]?.url || '/placeholder-album.jpg');
+        setImageUrls(urls);
+      })
+      .catch((error) => console.error('Failed to fetch albums:', error));
+  }, []);
 
   const loadImages = () => {
     filmWheelImage = new Image();
@@ -46,7 +43,7 @@ const TurnTableComponent = () => {
     projectorImage = new Image();
     projectorImage.src = '/Projector.svg';
 
-    return IMAGE_URLS.map((url) => {
+    return imageUrls.map((url) => {
       const img = new Image();
       img.src = url;
       return img;
@@ -66,18 +63,62 @@ const TurnTableComponent = () => {
 
       const images = loadImages();
       
-      // Polygon의 크기와 위치를 상대적으로 계산
-      const polygonSize = Math.min(stageWidth, stageHeight) * 0.8; // 화면의 80%
-      const polygonX = stageWidth / 2;
+      const polygonSize = Math.min(stageWidth, stageHeight);
+      const polygonX = stageWidth / 20;
       const polygonY = stageHeight / 2;
-    
+      
       polygon = new Polygon(polygonX, polygonY, polygonSize, 16, images);
     }
   };
 
-  const drawBackground = (ctx) => {
-    ctx.fillStyle = '#252b2e';
-    ctx.fillRect(0, 0, ctx.canvas.width / pixelRatio, ctx.canvas.height / pixelRatio);
+  const drawWave = (ctx, img, x, y, width, height) => {
+    const amplitude = 10000; // 물결의 진폭
+    const frequency = 0.7; // 물결의 주파수
+
+    // 흑백 이미지 그리기
+    ctx.save();
+    ctx.filter = 'grayscale(20%) blur(8px)';
+    ctx.drawImage(img, x, y, width, height);
+    ctx.restore();
+
+    // 그라디언트를 적용할 경로를 만듭니다.
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+
+    for (let i = 0; i <= width; i++) {
+        const dy = (amplitude * Math.sin((i * frequency) + time) < height / 5) ? 0 : height;
+        ctx.lineTo(x + i, y + dy);
+    }
+
+    ctx.lineTo(x + width, y + height);
+    ctx.lineTo(x, y + height);
+    ctx.closePath();
+    ctx.clip();
+
+    ctx.save();
+    ctx.drawImage(img, x, y, width, height);
+    ctx.restore();
+
+    // Ensure the gradient dimensions are finite
+    const gradientX1 = x;
+    const gradientY1 = y;
+    const gradientX2 = x + width;
+    const gradientY2 = y + height;
+
+    if (isFinite(gradientX1) && isFinite(gradientY1) && isFinite(gradientX2) && isFinite(gradientY2)) {
+      // 색상 그라디언트 적용
+      const gradient = ctx.createLinearGradient(gradientX1, gradientY1, gradientX2, gradientY2);
+      gradient.addColorStop(1, 'rgba(0, 0, 255, 0.2)');
+
+      ctx.save();
+      ctx.fillStyle = gradient;
+      ctx.globalCompositeOperation = 'overlay';
+      ctx.fill();
+      ctx.restore();
+    }
+
+    ctx.restore();
   };
 
   const drawfilmWheel = (ctx, rotation) => {
@@ -181,7 +222,7 @@ const TurnTableComponent = () => {
         document.removeEventListener('pointerup', handlePointerUp);
       };
     }
-  }, []);
+  }, [imageUrls]);
 
   return (
     <canvas ref={canvasRef} style={{
