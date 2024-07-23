@@ -139,7 +139,6 @@ export default function Home() {
           <div className="album-section">
             <h1>Your Albums</h1>
             <AlbumGrid albums={albums} />
-            <AlbumShelf/>
           </div>
         </div>
       )}
