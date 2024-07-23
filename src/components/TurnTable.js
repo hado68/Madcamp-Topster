@@ -68,7 +68,13 @@ const TurnTableComponent = () => {
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const images = loadImages();
-      polygon = new Polygon(stageWidth / 20, stageHeight / 2, stageHeight, 16, images);
+      
+      // Polygon의 크기와 위치를 상대적으로 계산
+    const polygonSize = Math.min(stageWidth, stageHeight); // 화면의 100%
+    const polygonX = stageWidth / 20;
+    const polygonY = stageHeight / 2;
+    
+    polygon = new Polygon(polygonX, polygonY, polygonSize, 16, images);
     }
   };
 
@@ -120,7 +126,6 @@ const TurnTableComponent = () => {
       const canvasWidth = canvas.width / pixelRatio;
       const canvasHeight = canvas.height / pixelRatio;
       
-      // 이미지 크기를 캔버스의 1/30로 설정
       const leftSize = Math.min(canvasWidth, canvasHeight) / 21;
       const rightSize = Math.min(canvasWidth, canvasHeight) / 28;
       
