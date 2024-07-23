@@ -138,7 +138,7 @@ export class Polygon {
       ctx.rotate((((360 / this.sides) * i + 45) * Math.PI) / 180);
       ctx.beginPath();
 
-      const squareSize = 260;
+      const squareSize = this.radius * 0.4;
       const halfSize = squareSize / 2;
 
       for (let j = 0; j < 4; j++) {
