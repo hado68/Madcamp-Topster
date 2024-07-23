@@ -1,30 +1,11 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Polygon } from './Polygon';
-
-const IMAGE_URLS = [
-  '/albums/cover1.jpg',
-  '/albums/cover2.jpg',
-  '/albums/cover3.jpg',
-  '/albums/cover4.jpg',
-  '/albums/cover5.jpg',
-  '/albums/cover6.jpg',
-  '/albums/cover1.jpg',
-  '/albums/cover2.jpg',
-  '/albums/cover3.jpg',
-  '/albums/cover4.jpg',
-  '/albums/cover5.jpg',
-  '/albums/cover6.jpg',
-  '/albums/cover1.jpg',
-  '/albums/cover2.jpg',
-  '/albums/cover3.jpg',
-  '/albums/cover4.jpg',
-  '/albums/cover5.jpg',
-  '/albums/cover6.jpg'
-];
 
 const TurnTableComponent = () => {
   const canvasRef = useRef(null);
   const pixelRatio = typeof window !== 'undefined' && window.devicePixelRatio > 1 ? 2 : 1;
+  const [albums, setAlbums] = useState([]);
+  const [imageUrls, setImageUrls] = useState([]);
 
   let isDown = false;
   let moveX = 0;
@@ -35,9 +16,25 @@ const TurnTableComponent = () => {
   let filmWheelImage = null;
   let projectorImage = null;
   let filmWheelRotation = 0;
-
-  // 물결 효과를 위한 변수
   let time = 0;
+
+  useEffect(() => {
+    // Fetch albums data from Spotify API
+    fetch('/api/albums')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch albums');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setAlbums(data.albums || []);
+        // Extract image URLs from albums
+        const urls = data.albums.slice(0, 18).map(album => album.images[0]?.url || '/placeholder-album.jpg');
+        setImageUrls(urls);
+      })
+      .catch((error) => console.error('Failed to fetch albums:', error));
+  }, []);
 
   const loadImages = () => {
     filmWheelImage = new Image();
@@ -46,7 +43,7 @@ const TurnTableComponent = () => {
     projectorImage = new Image();
     projectorImage.src = '/Projector.svg';
 
-    return IMAGE_URLS.map((url) => {
+    return imageUrls.map((url) => {
       const img = new Image();
       img.src = url;
       return img;
@@ -69,12 +66,11 @@ const TurnTableComponent = () => {
 
       const images = loadImages();
       
-      // Polygon의 크기와 위치를 상대적으로 계산
-    const polygonSize = Math.min(stageWidth, stageHeight); // 화면의 100%
-    const polygonX = stageWidth / 20;
-    const polygonY = stageHeight / 2;
-    
-    polygon = new Polygon(polygonX, polygonY, polygonSize, 16, images);
+      const polygonSize = Math.min(stageWidth, stageHeight);
+      const polygonX = stageWidth / 20;
+      const polygonY = stageHeight / 2;
+      
+      polygon = new Polygon(polygonX, polygonY, polygonSize, 16, images);
     }
   };
 
@@ -107,15 +103,23 @@ const TurnTableComponent = () => {
     ctx.drawImage(img, x, y, width, height);
     ctx.restore();
 
-    // 색상 그라디언트 적용
-    const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
-    gradient.addColorStop(1, 'rgba(0, 0, 255, 0.2)');
+    // Ensure the gradient dimensions are finite
+    const gradientX1 = x;
+    const gradientY1 = y;
+    const gradientX2 = x + width;
+    const gradientY2 = y + height;
 
-    ctx.save();
-    ctx.fillStyle = gradient;
-    ctx.globalCompositeOperation = 'overlay';
-    ctx.fill();
-    ctx.restore();
+    if (isFinite(gradientX1) && isFinite(gradientY1) && isFinite(gradientX2) && isFinite(gradientY2)) {
+      // 색상 그라디언트 적용
+      const gradient = ctx.createLinearGradient(gradientX1, gradientY1, gradientX2, gradientY2);
+      gradient.addColorStop(1, 'rgba(0, 0, 255, 0.2)');
+
+      ctx.save();
+      ctx.fillStyle = gradient;
+      ctx.globalCompositeOperation = 'overlay';
+      ctx.fill();
+      ctx.restore();
+    }
 
     ctx.restore();
   };
@@ -244,7 +248,7 @@ const TurnTableComponent = () => {
         document.removeEventListener('pointerup', handlePointerUp);
       };
     }
-  }, []);
+  }, [imageUrls]);
 
   return <canvas ref={canvasRef} style={{ display: 'block' }} />;
 };

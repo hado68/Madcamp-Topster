@@ -83,9 +83,9 @@ export default function Album({ album }) {
           src={album.images[0].url}
           width={windowDimensions.width}
           height={windowDimensions.height}
-          scale={1.4}
+          scale={1.05}
           entropy={10}
-          maxParticles={10000}
+          maxParticles={7000}
           particleOptions={particleOptions}
           mouseMoveForce={motionForce}
           touchMoveForce={motionForce}
