@@ -9,6 +9,11 @@ export default function Home() {
   const [searchResults, setSearchResults] = useState([]);
   const [albums, setAlbums] = useState([]);
 
+  // Log session status for debugging
+  useEffect(() => {
+    console.log('Session Status:', status);
+  }, [status]);
+
   useEffect(() => {
     if (status === 'authenticated') {
       fetch('/api/albums')
@@ -82,7 +87,8 @@ export default function Home() {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
+    <main>
+      {status === 'unauthenticated' && (
       <button
         onClick={() => signIn('spotify')}
         style={{
@@ -127,69 +133,68 @@ export default function Home() {
         />
         <span style={{ transition: 'opacity 0.1s ease-in-out' }}>Sign in with Spotify</span>
       </button>
-      <div className="container">
-        <div className="search-section" style={{ position: 'relative' }}>
-          <input
-            type="text"
-            placeholder="Search for an album"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{
-              padding: '10px',
-              fontSize: '16px',
-              marginBottom: '10px',
-              width: '300px',
-            }}
-          />
-          {searchResults.length > 0 && (
-            <div
-              className="search-results"
+      )}
+      {status === 'authenticated' && (
+        <div className="container">
+          <div className="search-section" style={{ position: 'relative' }}>
+            <input
+              type="text"
+              placeholder="Search for an album"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               style={{
-                position: 'absolute',
-                top: '100%',
-                left: '0',
-                right: '0',
-                maxHeight: '300px',
-                overflowY: 'auto',
-                backgroundColor: '#fff',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                borderRadius: '8px',
-                zIndex: 1000,
+                padding: '10px',
+                fontSize: '16px',
+                marginBottom: '10px',
+                width: '300px',
               }}
-            >
-              <ul style={{ listStyle: 'none', padding: '10px' }}>
-                {searchResults.slice(0, 6).map((album) => (
-                  <li
-                    key={album.id}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      padding: '10px',
-                      cursor: 'pointer',
-                      borderBottom: '1px solid #eee',
-                    }}
-                    onClick={() => addAlbum(album)}
-                  >
-                    <img
-                      src={album.images[0].url}
-                      alt={album.name}
-                      width="50"
-                      height="50"
-                      style={{ marginRight: '10px', borderRadius: '4px' }}
-                    />
-                    <p style={{ margin: 0 }}>{album.name}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            />
+            {searchResults.length > 0 && (
+              <div
+                className="search-results"
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: '0',
+                  right: '0',
+                  maxHeight: '300px',
+                  overflowY: 'auto',
+                  backgroundColor: '#fff',
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                  borderRadius: '8px',
+                  zIndex: 1000,
+                }}
+              >
+                <ul style={{ listStyle: 'none', padding: '10px' }}>
+                  {searchResults.slice(0, 6).map((album) => (
+                    <li
+                      key={album.id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '10px',
+                        cursor: 'pointer',
+                        borderBottom: '1px solid #eee',
+                      }}
+                      onClick={() => addAlbum(album)}
+                    >
+                      <img
+                        src={album.images[0].url}
+                        alt={album.name}
+                        width="50"
+                        height="50"
+                        style={{ marginRight: '10px', borderRadius: '4px' }}
+                      />
+                      <p style={{ margin: 0 }}>{album.name}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
-          <div className="album-section">
-            <h1>Your Albums</h1>
-            <AlbumGrid albums={albums} />
-          </div>
-          )}
+          <AlbumGrid albums={albums} />
         </div>
-      </div>
-    </div>
+      )}
+    </main>
   );
 }
