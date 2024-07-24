@@ -77,6 +77,26 @@ export default function Home() {
     };
   };
 
+  const removeAlbum = async (album) => {
+    try {
+      const response = await fetch(`/api/albums/${album.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ albumId: album.id }),
+      });
+  
+      if (response.ok) {
+        setAlbums((prevAlbums) => prevAlbums.filter((a) => a.id !== album.id));
+      } else {
+        console.error('Failed to remove album');
+      }
+    } catch (error) {
+      console.error('Failed to remove album:', error);
+    }
+  };
+  
   const debouncedSearch = useCallback(debounce(handleSearch, 500), [handleSearch]);
 
   useEffect(() => {
@@ -152,7 +172,7 @@ export default function Home() {
               </div>
             )}
           </div>
-          <AlbumGrid albums={albums} />
+          <AlbumGrid albums={albums} onRemoveAlbum={removeAlbum} />
         </div>
       )}
     </main>

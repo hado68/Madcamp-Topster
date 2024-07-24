@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../styles/AlbumGrid.css';
 
-const AlbumGrid = ({ albums }) => {
+const AlbumGrid = ({ albums, onRemoveAlbum }) => {
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const popupRef = useRef(null);
   const gradientRef = useRef(null);
+  const albumGridRef = useRef(null);
 
+  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
@@ -37,16 +39,41 @@ const AlbumGrid = ({ albums }) => {
     gradientRef.current.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0))`;
   };
 
+  const handleDragStart = (e, album) => {
+    e.dataTransfer.setData('album', JSON.stringify(album));
+  };
+
+  const handleDropOutside = (e) => {
+    e.preventDefault();
+    const album = JSON.parse(e.dataTransfer.getData('album'));
+    onRemoveAlbum(album);
+  };
+
+  const handleDragOverOutside = (e) => {
+    e.preventDefault();
+  };
+
+  useEffect(() => {
+    document.addEventListener('drop', handleDropOutside);
+    document.addEventListener('dragover', handleDragOverOutside);
+    return () => {
+      document.removeEventListener('drop', handleDropOutside);
+      document.removeEventListener('dragover', handleDragOverOutside);
+    };
+  }, []);
+
   return (
-    <div className="album-grid">
+    <div className="album-grid" ref={albumGridRef}>
       {albums.slice(0, 16).map((album) => (
-        <div 
-          key={album.id} 
+        <div
+          key={album.id}
           className="album-grid-item"
           onClick={() => setSelectedAlbum(album)}
+          draggable
+          onDragStart={(e) => handleDragStart(e, album)}
         >
-          <img 
-            src={album.images[0]?.url || '/placeholder-album.jpg'} 
+          <img
+            src={album.images[0]?.url || '/placeholder-album.jpg'}
             alt={album.name}
             className="album-image"
           />
@@ -54,8 +81,8 @@ const AlbumGrid = ({ albums }) => {
       ))}
       {selectedAlbum && (
         <div className="popup-overlay">
-          <div 
-            className="popup-content" 
+          <div
+            className="popup-content"
             ref={popupRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={() => {
@@ -65,8 +92,8 @@ const AlbumGrid = ({ albums }) => {
             }}
           >
             <div className="popup-gradient" ref={gradientRef}></div>
-            <img 
-              src={selectedAlbum.images[0]?.url || '/placeholder-album.jpg'} 
+            <img
+              src={selectedAlbum.images[0]?.url || '/placeholder-album.jpg'}
               alt={selectedAlbum.name}
               className="popup-image"
             />
