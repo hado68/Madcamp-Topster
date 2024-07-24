@@ -7,7 +7,7 @@ const Unauthenticated = () => {
     <div style={styles.outerContainer}>
       <div style={styles.innerContainer}>
         <img
-          src="/supernatural.webp" // Ensure this path is correct and the image is available
+          src="/AppIcon.png" // Ensure this path is correct and the image is available
           alt="Welcome"
           style={styles.image}
         />
@@ -15,14 +15,14 @@ const Unauthenticated = () => {
           onClick={() => signIn('spotify')}
           style={styles.button}
           onMouseOver={(e) => {
-            e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
             const img = e.currentTarget.querySelector('img');
             const span = e.currentTarget.querySelector('span');
             if (img) img.style.opacity = '0.8';
             if (span) span.style.opacity = '0.8';
           }}
           onMouseOut={(e) => {
-            e.currentTarget.style.backgroundColor = '#000';
+            e.currentTarget.style.backgroundColor = '#fff';
             const img = e.currentTarget.querySelector('img');
             const span = e.currentTarget.querySelector('span');
             if (img) img.style.opacity = '1';
@@ -51,14 +51,14 @@ const styles = {
     justifyContent: 'center',
     height: '100vh',
     overflow: 'hidden', // Prevent scrolling
-    backgroundImage: 'url(/backgroundGradient.svg)', // Set your background image here
+    backgroundImage: 'url(/LPcafe.svg)', // Set your background image here
     backgroundSize: 'cover', // Cover the whole container
     backgroundPosition: 'center', // Center the background image
     backgroundRepeat: 'no-repeat', // Do not repeat the background image
   },
   innerContainer: {
-    backgroundColor: '#252b2e', // Background color of the inner container
-    padding: '100px 50px',
+    backgroundColor: '#000', // Background color of the inner container
+    padding: '100px 100px',
     borderRadius: '10px', // Rounded corners for the container
     display: 'flex',
     flexDirection: 'column',
@@ -73,10 +73,10 @@ const styles = {
   },
   button: {
     alignItems: 'center',
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
     borderColor: 'rgba(0, 0, 0, 0.1)',
     borderRadius: '0.5rem',
-    color: '#fff',
+    color: '#000',
     display: 'flex',
     fontSize: '1.1rem',
     fontWeight: '500',
