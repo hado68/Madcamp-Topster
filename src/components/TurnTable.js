@@ -28,7 +28,7 @@ const TurnTableComponent = () => {
       .then((data) => {
         setAlbums(data.albums || []);
         // Extract image URLs from albums
-        const urls = data.albums.slice(0, 18).map(album => album.images[0]?.url || '/placeholder-album.jpg');
+        const urls = data.albums.slice(0, 16).map(album => album.images[0]?.url || '/placeholder-album.jpg');
         setImageUrls(urls);
       })
       .catch((error) => console.error('Failed to fetch albums:', error));
