@@ -8,7 +8,7 @@
   width: 100vw; 
   box-sizing: border-box; /* Include padding in height calculation */
   overflow: hidden; /* Prevent scrollbars */
-  background-image: url('/blackoakwood.svg');
+  background-image: url('/darkwood.svg');
   background-size: cover; /* 이미지를 전체 영역에 맞게 조절 */
   background-position: center; /* 이미지를 중앙에 배치 */
 }
@@ -21,7 +21,7 @@
   row-gap: 20px; /* 위아래 간격 */
   column-gap: 24px; /* 좌우 간격 */
   padding: 20px 20px 20px 20px; 
-  background-image: url('/Group 11.svg');
+  background-image: url('/AlbumShelf.svg');
   background-size: cover; /* 이미지를 전체 영역에 맞게 조절 */
   background-position: center; /* 이미지를 중앙에 배치 */
 }
