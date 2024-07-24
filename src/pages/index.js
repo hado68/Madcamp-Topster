@@ -79,6 +79,8 @@ export default function Home() {
     };
   };
 
+  const debouncedSearch = useCallback(debounce(handleSearch, 500), [handleSearch]);
+
   const removeAlbum = async (album) => {
     try {
       const response = await fetch(`/api/albums/${album.id}`, {
@@ -98,8 +100,6 @@ export default function Home() {
       console.error('Failed to remove album:', error);
     }
   };
-  
-  const debouncedSearch = useCallback(debounce(handleSearch, 500), [handleSearch]);
 
   useEffect(() => {
     debouncedSearch();
@@ -178,7 +178,7 @@ export default function Home() {
               </div>
             )}
           </div>
-          <AlbumGrid albums={albums} />
+          <AlbumGrid albums={albums} onRemoveAlbum={removeAlbum} />
           <div style={{ marginLeft: '100px', marginTop: '500px' }}>
             <img
               src="/TurnTableImage.png"
