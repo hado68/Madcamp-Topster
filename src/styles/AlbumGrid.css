@@ -13,9 +13,9 @@
   background-position: center; /* 이미지를 중앙에 배치 */
 }
 
-
 .album-grid {
   display: grid;
+  height: 100%;
   width: 100%;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
@@ -25,7 +25,9 @@
   background-image: url('/AlbumShelf.svg');
   background-size: cover; /* 이미지를 전체 영역에 맞게 조절 */
   background-position: center; /* 이미지를 중앙에 배치 */
+  
 }
+
 .album-grid-item {
   position: relative; /* 가상 요소를 위한 상대 위치 설정 */
   cursor: pointer;
