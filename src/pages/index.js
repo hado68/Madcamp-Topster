@@ -1,7 +1,8 @@
-import { useSession, signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useState, useEffect, useCallback } from 'react';
 import { searchAlbums } from '../utils/spotify';
 import AlbumGrid from '../components/AlbumGrid';
+import Unauthenticated from '../components/Unauthenticated';
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -88,57 +89,13 @@ export default function Home() {
 
   return (
     <main>
-      {status === 'unauthenticated' && (
-      <button
-        onClick={() => signIn('spotify')}
-        style={{
-          alignItems: 'center',
-          backgroundColor: '#000',
-          borderColor: 'rgba(0, 0, 0, 0.1)',
-          borderRadius: '0.5rem',
-          color: '#fff',
-          display: 'flex',
-          fontSize: '1.1rem',
-          fontWeight: '500',
-          justifyContent: 'center',
-          minHeight: '62px',
-          padding: '0.75rem 1rem',
-          position: 'relative',
-          transition: 'all 0.1s ease-in-out',
-          margin: '20px',
-          cursor: 'pointer'
-        }}
-        onMouseOver={(e) => {
-          e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-          const img = e.currentTarget.querySelector('img');
-          const span = e.currentTarget.querySelector('span');
-          if (img) img.style.opacity = '0.8';
-          if (span) span.style.opacity = '0.8';
-        }}
-        onMouseOut={(e) => {
-          e.currentTarget.style.backgroundColor = '#000';
-          const img = e.currentTarget.querySelector('img');
-          const span = e.currentTarget.querySelector('span');
-          if (img) img.style.opacity = '1';
-          if (span) span.style.opacity = '1';
-        }}
-      >
-        <img
-          loading="lazy"
-          height="24"
-          width="24"
-          src="/spotify.svg"  // Ensure this path is correct and the image is available
-          alt="Spotify"
-          style={{ marginRight: '10px', transition: 'opacity 0.1s ease-in-out' }}
-        />
-        <span style={{ transition: 'opacity 0.1s ease-in-out' }}>Sign in with Spotify</span>
-      </button>
-      )}
+      {status === 'unauthenticated' && <Unauthenticated />}
       {status === 'authenticated' && (
         <div className="container">
-          <div className="search-section" style={{ position: 'relative' }}>
+          <div className="search-section" style={{ position: 'relative', marginTop: '80px', marginRight: '20px' }}>
             <input
               type="text"
+              className="search-input" // Apply the new CSS class
               placeholder="Search for an album"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -157,16 +114,18 @@ export default function Home() {
                   top: '100%',
                   left: '0',
                   right: '0',
-                  maxHeight: '300px',
-                  overflowY: 'auto',
-                  backgroundColor: '#fff',
+                  maxHeight: '400px',
+                  overflowY: 'scroll',
+                  backgroundColor: '#000', // Black background
                   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                   borderRadius: '8px',
                   zIndex: 1000,
+                  scrollbarWidth: 'none', // For Firefox
+                  msOverflowStyle: 'none', // For Internet Explorer and Edge
                 }}
               >
                 <ul style={{ listStyle: 'none', padding: '10px' }}>
-                  {searchResults.slice(0, 6).map((album) => (
+                  {searchResults.slice(0, 50).map((album) => (
                     <li
                       key={album.id}
                       style={{
@@ -175,6 +134,7 @@ export default function Home() {
                         padding: '10px',
                         cursor: 'pointer',
                         borderBottom: '1px solid #eee',
+                        color: '#fff', // White text
                       }}
                       onClick={() => addAlbum(album)}
                     >
