@@ -1,5 +1,6 @@
 import { useSession } from 'next-auth/react';
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/router';
 import { searchAlbums } from '../utils/spotify';
 import AlbumGrid from '../components/AlbumGrid';
 import Unauthenticated from '../components/Unauthenticated';
@@ -9,6 +10,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [albums, setAlbums] = useState([]);
+  const router = useRouter();
 
   // Log session status for debugging
   useEffect(() => {
@@ -103,6 +105,10 @@ export default function Home() {
     debouncedSearch();
   }, [searchTerm, debouncedSearch]);
 
+  const handleTurntableClick = () => {
+    router.push('/turntable');
+  };
+
   if (status === 'loading') {
     return <p>Loading...</p>;
   }
@@ -115,8 +121,8 @@ export default function Home() {
           <div className="search-section" style={{ position: 'relative', marginTop: '80px', marginRight: '20px' }}>
             <input
               type="text"
-              className="search-input" // Apply the new CSS class
-              placeholder="Search for an album"
+              className="search-input"
+              placeholder="Search for an Album"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
@@ -136,12 +142,12 @@ export default function Home() {
                   right: '0',
                   maxHeight: '400px',
                   overflowY: 'scroll',
-                  backgroundColor: '#000', // Black background
+                  backgroundColor: '#000',
                   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                   borderRadius: '8px',
                   zIndex: 1000,
-                  scrollbarWidth: 'none', // For Firefox
-                  msOverflowStyle: 'none', // For Internet Explorer and Edge
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
                 }}
               >
                 <ul style={{ listStyle: 'none', padding: '10px' }}>
@@ -154,7 +160,7 @@ export default function Home() {
                         padding: '10px',
                         cursor: 'pointer',
                         borderBottom: '1px solid #eee',
-                        color: '#fff', // White text
+                        color: '#fff',
                       }}
                       onClick={() => addAlbum(album)}
                     >
@@ -172,7 +178,22 @@ export default function Home() {
               </div>
             )}
           </div>
-          <AlbumGrid albums={albums} onRemoveAlbum={removeAlbum} />
+          <AlbumGrid albums={albums} />
+          <div style={{ marginLeft: '100px', marginTop: '500px' }}>
+            <img
+              src="/TurnTableImage.png"
+              alt="Turntable"
+              onClick={handleTurntableClick}
+              style={{
+                width: '200px',
+                height: 'auto',
+                borderRadius: '10px',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                cursor: 'pointer',
+              }}
+            />
+            
+          </div>
         </div>
       )}
     </main>
