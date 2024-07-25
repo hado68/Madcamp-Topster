@@ -63,7 +63,14 @@ const AlbumGrid = ({ albums, onRemoveAlbum }) => {
     };
   }, []);
 
-  const handleImageClick = () => {
+  const handleImageClick = (e, album) => {
+    const rect = albumGridRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setSelectedAlbum({ ...album, cursorX: x, cursorY: y });
+  };
+
+  const handlePopupClick = () => {
     if (selectedAlbum) {
       router.push(`/album/${selectedAlbum.id}`);
     }
@@ -75,7 +82,7 @@ const AlbumGrid = ({ albums, onRemoveAlbum }) => {
         <div
           key={album.id}
           className="album-grid-item"
-          onClick={() => setSelectedAlbum(album)}
+          onClick={(e) => handleImageClick(e, album)}
           draggable
           onDragStart={(e) => handleDragStart(e, album)}
         >
@@ -98,12 +105,18 @@ const AlbumGrid = ({ albums, onRemoveAlbum }) => {
               }
             }}
           >
-            <div className="popup-gradient" ref={gradientRef}></div>
+            <div
+              className="popup-gradient"
+              ref={gradientRef}
+              style={{
+                background: `radial-gradient(circle at ${selectedAlbum.cursorX}px ${selectedAlbum.cursorY}px, rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0))`,
+              }}
+            ></div>
             <img
               src={selectedAlbum.images[0]?.url || '/placeholder-album.jpg'}
               alt={selectedAlbum.name}
               className="popup-image"
-              onClick={handleImageClick}
+              onClick={handlePopupClick}
             />
           </div>
         </div>
