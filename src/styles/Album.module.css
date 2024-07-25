@@ -25,20 +25,23 @@
   z-index: -1;
 }
 
-.albumContent {
-  flex: 1;
+.trackList {
+  position: fixed; /* Fix the sidebar to the side */
+  top: 0;
+  left: 0px;
+  width: 350px;
+  height: 100%;
+  background-color: rgba(0, 0, 0);
   padding: 20px;
   color: white;
-  z-index: 1;
+  transform: translateX(-80%); /* Hide sidebar by default */
+  transition: transform 0.3s ease-in-out; /* Smooth transition */
+  z-index: 3;
 }
 
-.trackList {
-  width: 300px;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 20px;
-  color: white;
-  overflow-y: auto;
-  z-index: 3;
+/* Sidebar appears when hovering over the container */
+.trackList:hover {
+  transform: translateX(0);
 }
 
 .trackItem {
@@ -48,4 +51,24 @@
 
 .trackItem:hover {
   color: #1db954;
+}
+
+.trackListContent {
+  position: relative;
+  height: 100%;
+}
+
+.customImage {
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  transform: translateY(-90%);
+  width: 80px; /* 원하는 크기로 조정하세요 */
+  height: auto;
+  z-index: 4;
+  transition: transform 0.3s ease-in-out;
+}
+
+.flipped {
+  transform: translateY(-90%) scaleX(-1);
 }
