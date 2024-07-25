@@ -75,6 +75,8 @@ export default function Album({ album }) {
     setCurrentTrack(trackUrl);
   };
 
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <div className={styles.albumPage}>
       <Player token={session?.accessToken} playlist={[currentTrack]} />
@@ -102,8 +104,14 @@ export default function Album({ album }) {
         />
       )}
       
-      <div className={styles.trackList}>
-        <h2>Track List</h2>
+      <div 
+        className={styles.trackList}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className={styles.trackListContent}>
+        <h1>{album.name}</h1>
+        <h3>Track List</h3>
         {album.tracks.map((track, index) => (
           <div 
             key={index} 
@@ -113,9 +121,12 @@ export default function Album({ album }) {
             {track.name}
           </div>
         ))}
-      </div>
-      <div className={styles.albumContent}>
-        <h1>{album.name}</h1>
+        <img 
+          src="/Arrow.svg" 
+          alt="Custom Image" 
+          className={`${styles.customImage} ${isHovered ? styles.flipped : ''}`}
+        />
+        </div>
       </div>
     </div>
   );

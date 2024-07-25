@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { searchAlbums } from '../utils/spotify';
 import AlbumGrid from '../components/AlbumGrid';
 import Unauthenticated from '../components/Unauthenticated';
+import Head from 'next/head';
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -114,6 +115,14 @@ export default function Home() {
   }
 
   return (
+  <>
+    <Head>
+        <title>App Name</title>
+        <meta name="description" content="TurnTable Page" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="/AppIcon.png" />
+    </Head>
+
     <main>
       {status === 'unauthenticated' && <Unauthenticated />}
       {status === 'authenticated' && (
@@ -130,6 +139,8 @@ export default function Home() {
                 fontSize: '16px',
                 marginBottom: '10px',
                 width: '300px',
+                borderRadius: '8px', // 모서리를 둥글게 만드는 속성
+              border: '1px solid #ccc', // 테두리 색상 및 두께 설정 (선택 사항)
               }}
             />
             {searchResults.length > 0 && (
@@ -197,5 +208,6 @@ export default function Home() {
         </div>
       )}
     </main>
+  </>
   );
 }

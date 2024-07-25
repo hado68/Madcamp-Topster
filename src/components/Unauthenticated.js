@@ -58,7 +58,7 @@ const styles = {
   },
   innerContainer: {
     backgroundColor: '#000', // Background color of the inner container
-    padding: '100px 100px',
+    padding: '100px 80px',
     borderRadius: '10px', // Rounded corners for the container
     display: 'flex',
     flexDirection: 'column',
@@ -69,7 +69,7 @@ const styles = {
   image: {
     width: '300px', // Adjust the size as needed
     height: 'auto',
-    marginBottom: '20px',
+    marginBottom: '50px',
   },
   button: {
     alignItems: 'center',
@@ -85,7 +85,7 @@ const styles = {
     padding: '0.75rem 1rem',
     position: 'relative',
     transition: 'all 0.1s ease-in-out',
-    margin: '20px',
+    margin: '30px',
     cursor: 'pointer',
   },
 };
