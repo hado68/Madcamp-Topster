@@ -1,4 +1,3 @@
-/* styles/Album.module.css */
 .albumPage {
   display: flex;
   flex-direction: row;
@@ -29,13 +28,13 @@
   position: fixed; /* Fix the sidebar to the side */
   top: 0;
   left: 0px;
-  width: 350px;
+  width: 400px;
   height: 100%;
   background-color: rgba(0, 0, 0);
   padding: 20px;
   color: white;
   overflow-y: 'scroll';
-  transform: translateX(-80%); /* Hide sidebar by default */
+  transform: translateX(-85%); /* Hide sidebar by default */
   transition: transform 0.3s ease-in-out; /* Smooth transition */
   z-index: 3;
 }
@@ -72,4 +71,24 @@
 
 .flipped {
   transform: translateY(-90%) scaleX(-1);
+}
+
+.goBackButton {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  z-index: 3; /* Ensure it's above the particle image */
+  transition: background-color 0.3s ease;
+}
+
+.goBackButton:hover {
+  background-color: white;
+  color: black;
 }
