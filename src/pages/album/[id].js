@@ -71,9 +71,19 @@ export default function Album({ album }) {
     return <p>Album not found</p>;
   }
 
-  const handleTrackClick = (trackUrl) => {
-    setCurrentTrack(trackUrl);
-  };
+// 트랙 클릭 핸들러에서 세션 저장소에 저장
+const handleTrackClick = (trackUrl) => {
+  setCurrentTrack(trackUrl);
+  sessionStorage.setItem('currentTrack', trackUrl);
+};
+
+// 페이지가 로드될 때 세션 저장소에서 트랙 정보를 복원
+useEffect(() => {
+  const savedTrack = sessionStorage.getItem('currentTrack');
+  if (savedTrack) {
+    setCurrentTrack(savedTrack);
+  }
+}, []);
 
   const [isHovered, setIsHovered] = useState(false);
 
