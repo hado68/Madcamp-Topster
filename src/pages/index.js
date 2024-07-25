@@ -64,6 +64,8 @@ export default function Home() {
 
       if (response.ok) {
         setAlbums([...albums, album]);
+        setSearchTerm(''); // Clear the search term
+        setSearchResults([]); // Clear the search results
       } else {
         console.error('Failed to add album');
       }
@@ -91,7 +93,7 @@ export default function Home() {
         },
         body: JSON.stringify({ albumId: album.id }),
       });
-  
+
       if (response.ok) {
         setAlbums((prevAlbums) => prevAlbums.filter((a) => a.id !== album.id));
       } else {
@@ -115,99 +117,98 @@ export default function Home() {
   }
 
   return (
-  <>
-    <Head>
+    <>
+      <Head>
         <title>PlayBack</title>
         <meta name="description" content="TurnTable Page" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/AppIcon.png" />
-    </Head>
+      </Head>
 
-    <main>
-      {status === 'unauthenticated' && <Unauthenticated />}
-      {status === 'authenticated' && (
-        <div className="container">
-          <div className="search-section" style={{ position: 'relative', marginTop: '80px', marginRight: '20px' }}>
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Search for an Album"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                padding: '10px',
-                fontSize: '16px',
-                marginBottom: '10px',
-                width: '300px',
-                borderRadius: '8px', // 모서리를 둥글게 만드는 속성
-              border: '1px solid #ccc', // 테두리 색상 및 두께 설정 (선택 사항)
-              }}
-            />
-            {searchResults.length > 0 && (
-              <div
-                className="search-results"
+      <main>
+        {status === 'unauthenticated' && <Unauthenticated />}
+        {status === 'authenticated' && (
+          <div className="container">
+            <div className="search-section" style={{ position: 'relative', marginTop: '80px', marginRight: '20px' }}>
+              <input
+                type="text"
+                className="search-input"
+                placeholder="Search for an Album"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
-                  position: 'absolute',
-                  top: '100%',
-                  left: '0',
-                  right: '0',
-                  maxHeight: '400px',
-                  overflowY: 'scroll',
-                  backgroundColor: '#000',
-                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                  borderRadius: '8px',
-                  zIndex: 1000,
-                  scrollbarWidth: 'none',
-                  msOverflowStyle: 'none',
+                  padding: '10px',
+                  fontSize: '16px',
+                  marginBottom: '10px',
+                  width: '300px',
+                  borderRadius: '8px', // 모서리를 둥글게 만드는 속성
+                  border: '1px solid #ccc', // 테두리 색상 및 두께 설정 (선택 사항)
                 }}
-              >
-                <ul style={{ listStyle: 'none', padding: '10px' }}>
-                  {searchResults.slice(0, 50).map((album) => (
-                    <li
-                      key={album.id}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: '10px',
-                        cursor: 'pointer',
-                        borderBottom: '1px solid #eee',
-                        color: '#fff',
-                      }}
-                      onClick={() => addAlbum(album)}
-                    >
-                      <img
-                        src={album.images[0].url}
-                        alt={album.name}
-                        width="50"
-                        height="50"
-                        style={{ marginRight: '10px', borderRadius: '4px' }}
-                      />
-                      <p style={{ margin: 0 }}>{album.name}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              />
+              {searchResults.length > 0 && (
+                <div
+                  className="search-results"
+                  style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: '0',
+                    right: '0',
+                    maxHeight: '400px',
+                    overflowY: 'scroll',
+                    backgroundColor: '#000',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                    borderRadius: '8px',
+                    zIndex: 1000,
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none',
+                  }}
+                >
+                  <ul style={{ listStyle: 'none', padding: '10px' }}>
+                    {searchResults.slice(0, 50).map((album) => (
+                      <li
+                        key={album.id}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          padding: '10px',
+                          cursor: 'pointer',
+                          borderBottom: '1px solid #eee',
+                          color: '#fff',
+                        }}
+                        onClick={() => addAlbum(album)}
+                      >
+                        <img
+                          src={album.images[0].url}
+                          alt={album.name}
+                          width="50"
+                          height="50"
+                          style={{ marginRight: '10px', borderRadius: '4px' }}
+                        />
+                        <p style={{ margin: 0 }}>{album.name}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+            <AlbumGrid albums={albums} onRemoveAlbum={removeAlbum} />
+            <div style={{ marginLeft: '100px', marginTop: '500px' }}>
+              <img
+                src="/TurnTableImage.png"
+                alt="Turntable"
+                onClick={handleTurntableClick}
+                style={{
+                  width: '200px',
+                  height: 'auto',
+                  borderRadius: '10px',
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                  cursor: 'pointer',
+                }}
+              />
+            </div>
           </div>
-          <AlbumGrid albums={albums} onRemoveAlbum={removeAlbum} />
-          <div style={{ marginLeft: '100px', marginTop: '500px' }}>
-            <img
-              src="/TurnTableImage.png"
-              alt="Turntable"
-              onClick={handleTurntableClick}
-              style={{
-                width: '200px',
-                height: 'auto',
-                borderRadius: '10px',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                cursor: 'pointer',
-              }}
-            />
-            
-          </div>
-        </div>
-      )}
-    </main>
-  </>
+        )}
+      </main>
+    </>
   );
 }

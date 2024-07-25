@@ -60,7 +60,7 @@ const TurnTableComponent = () => {
       const images = loadImages();
 
       const polygonSize = Math.min(stageWidth, stageHeight);
-      const polygonX = stageWidth / 130;
+      const polygonX = stageWidth / 50;
       const polygonY = stageHeight / 2;
       
       polygon = new Polygon(polygonX, polygonY, polygonSize, 16, images);
