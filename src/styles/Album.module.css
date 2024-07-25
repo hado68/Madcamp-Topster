@@ -34,6 +34,7 @@
   background-color: rgba(0, 0, 0);
   padding: 20px;
   color: white;
+  overflow-y: 'scroll';
   transform: translateX(-80%); /* Hide sidebar by default */
   transition: transform 0.3s ease-in-out; /* Smooth transition */
   z-index: 3;
