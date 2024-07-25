@@ -4,15 +4,16 @@ import styles from '../styles/Album.module.css';
 import TurnTableComponent from '../components/TurnTable';
 import { useRouter } from 'next/router';
 
+
 const TurnTable = () => {
   const router = useRouter();
   return (
     <>
       <Head>
-        <title>Album Shelf</title>
+        <title>PlayBack</title>
         <meta name="description" content="TurnTable Page" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/AppIcon.png" />
       </Head>
 
       <main style={{

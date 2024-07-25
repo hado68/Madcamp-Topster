@@ -117,7 +117,7 @@ export default function Home() {
   return (
   <>
     <Head>
-        <title>App Name</title>
+        <title>PlayBack</title>
         <meta name="description" content="TurnTable Page" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/AppIcon.png" />

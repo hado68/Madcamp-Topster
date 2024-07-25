@@ -6,6 +6,8 @@ import ParticleImage, { forces, Vector } from "react-particle-image";
 import Player from '../../components/Player';
 import { useSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
+
 
 // Round number up to nearest step for better canvas performance
 const round = (n, step = 20) => Math.ceil(n / step) * step;
@@ -96,59 +98,69 @@ export default function Album({ album }) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className={styles.albumPage}>
-      {player}
-      {windowDimensions.width > 0 && windowDimensions.height > 0 && (
-        <ParticleImage
-          src={album.images[0].url}
-          width={windowDimensions.width}
-          height={windowDimensions.height}
-          scale={1.05}
-          entropy={10}
-          maxParticles={7000}
-          particleOptions={particleOptions}
-          mouseMoveForce={motionForce}
-          touchMoveForce={motionForce}
-          mouseDownForce={motionForce2}
-          backgroundColor="#252b2e"
-          style={{
-            position: 'fixed', 
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            zIndex: 2,
-          }}
-        />
-      )}
-      
-      <div 
-        className={styles.trackList}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <div className={styles.trackListContent}>
-          <h1>{album.name}</h1>
-          <h3>Track List</h3>
-          {album.tracks.map((track, index) => (
-            <div 
-              key={index} 
-              className={styles.trackItem}
-              onClick={() => handleTrackClick(track.external_urls.spotify)}
-            >
-              {track.name}
-            </div>
-          ))}
-          <img 
-            src="/Arrow.svg" 
-            alt="Custom Image" 
-            className={`${styles.customImage} ${isHovered ? styles.flipped : ''}`}
+    <>
+    <Head>
+        <title>App Name</title>
+        <meta name="description" content="TurnTable Page" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="/AppIcon.png" />
+    </Head>
+    <main>
+      <div className={styles.albumPage}>
+        {player}
+        {windowDimensions.width > 0 && windowDimensions.height > 0 && (
+          <ParticleImage
+            src={album.images[0].url}
+            width={windowDimensions.width}
+            height={windowDimensions.height}
+            scale={1.05}
+            entropy={10}
+            maxParticles={7000}
+            particleOptions={particleOptions}
+            mouseMoveForce={motionForce}
+            touchMoveForce={motionForce}
+            mouseDownForce={motionForce2}
+            backgroundColor="#252b2e"
+            style={{
+              position: 'fixed', 
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              zIndex: 2,
+            }}
           />
+        )}
+        
+        <div 
+          className={styles.trackList}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <div className={styles.trackListContent}>
+            <h1>{album.name}</h1>
+            <h3>Track List</h3>
+            {album.tracks.map((track, index) => (
+              <div 
+                key={index} 
+                className={styles.trackItem}
+                onClick={() => handleTrackClick(track.external_urls.spotify)}
+              >
+                {track.name}
+              </div>
+            ))}
+            <img 
+              src="/Arrow.svg" 
+              alt="Custom Image" 
+              className={`${styles.customImage} ${isHovered ? styles.flipped : ''}`}
+            />
+          </div>
         </div>
+        
+        <button className={styles.goBackButton} onClick={() => router.back()}>Go Back</button>
       </div>
-      
-      <button className={styles.goBackButton} onClick={() => router.back()}>Go Back</button>
-    </div>
+    </main>
+    </>
   );
 }
 
