@@ -92,3 +92,23 @@
   background-color: white;
   color: black;
 }
+
+.goBackButtonPolygon {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  z-index: 3; /* Ensure it's above the particle image */
+  transition: background-color 0.3s ease;
+}
+
+.goBackButtonPolygon:hover {
+  background-color: white;
+  color: black;
+}
