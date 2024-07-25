@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import '../styles/AlbumGrid.css';
 
 const AlbumGrid = ({ albums, onRemoveAlbum }) => {
@@ -6,8 +7,8 @@ const AlbumGrid = ({ albums, onRemoveAlbum }) => {
   const popupRef = useRef(null);
   const gradientRef = useRef(null);
   const albumGridRef = useRef(null);
+  const router = useRouter();
 
-  
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (popupRef.current && !popupRef.current.contains(event.target)) {
@@ -62,6 +63,12 @@ const AlbumGrid = ({ albums, onRemoveAlbum }) => {
     };
   }, []);
 
+  const handleImageClick = () => {
+    if (selectedAlbum) {
+      router.push(`/album/${selectedAlbum.id}`);
+    }
+  };
+
   return (
     <div className="album-grid" ref={albumGridRef}>
       {albums.slice(0, 16).map((album) => (
@@ -96,6 +103,7 @@ const AlbumGrid = ({ albums, onRemoveAlbum }) => {
               src={selectedAlbum.images[0]?.url || '/placeholder-album.jpg'}
               alt={selectedAlbum.name}
               className="popup-image"
+              onClick={handleImageClick}
             />
           </div>
         </div>
