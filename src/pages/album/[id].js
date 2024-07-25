@@ -1,6 +1,6 @@
 import { getAccessToken, getAlbums } from '../../utils/spotify';
 import styles from '../../styles/Album.module.css';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import useWindowSize from "@rooks/use-window-size";
 import ParticleImage, { forces, Vector } from "react-particle-image";
 import Player from '../../components/Player';
@@ -54,6 +54,7 @@ const motionForce = (x, y) => {
 const motionForce2 = (x, y) => {
   return forces.entropy(x, y, 2);
 };
+
 export default function Album({ album }) {
   const { innerWidth, innerHeight } = useWindowSize();
   const [windowDimensions, setWindowDimensions] = useState({ width: 0, height: 0 });
@@ -71,25 +72,32 @@ export default function Album({ album }) {
     return <p>Album not found</p>;
   }
 
-// 트랙 클릭 핸들러에서 세션 저장소에 저장
-const handleTrackClick = (trackUrl) => {
-  setCurrentTrack(trackUrl);
-  sessionStorage.setItem('currentTrack', trackUrl);
-};
+  // 트랙 클릭 핸들러에서 세션 저장소에 저장
+  const handleTrackClick = (trackUrl) => {
+    setCurrentTrack(trackUrl);
+    sessionStorage.setItem('currentTrack', trackUrl);
+  };
 
-// 페이지가 로드될 때 세션 저장소에서 트랙 정보를 복원
-useEffect(() => {
-  const savedTrack = sessionStorage.getItem('currentTrack');
-  if (savedTrack) {
-    setCurrentTrack(savedTrack);
-  }
-}, []);
+  // 페이지가 로드될 때 세션 저장소에서 트랙 정보를 복원
+  useEffect(() => {
+    const savedTrack = sessionStorage.getItem('currentTrack');
+    if (savedTrack) {
+      setCurrentTrack(savedTrack);
+    }
+  }, []);
+
+  const player = useMemo(() => {
+    if (currentTrack) {
+      return <Player token={session?.accessToken} playlist={[currentTrack]} />;
+    }
+    return null;
+  }, [currentTrack, session?.accessToken]);
 
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div className={styles.albumPage}>
-      <Player token={session?.accessToken} playlist={[currentTrack]} />
+      {player}
       {windowDimensions.width > 0 && windowDimensions.height > 0 && (
         <ParticleImage
           src={album.images[0].url}
