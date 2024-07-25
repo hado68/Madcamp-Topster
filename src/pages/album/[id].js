@@ -110,24 +110,26 @@ export default function Album({ album }) {
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className={styles.trackListContent}>
-        <h1>{album.name}</h1>
-        <h3>Track List</h3>
-        {album.tracks.map((track, index) => (
-          <div 
-            key={index} 
-            className={styles.trackItem}
-            onClick={() => handleTrackClick(track.external_urls.spotify)}
-          >
-            {track.name}
-          </div>
-        ))}
-        <img 
-          src="/Arrow.svg" 
-          alt="Custom Image" 
-          className={`${styles.customImage} ${isHovered ? styles.flipped : ''}`}
-        />
+          <h1>{album.name}</h1>
+          <h3>Track List</h3>
+          {album.tracks.map((track, index) => (
+            <div 
+              key={index} 
+              className={styles.trackItem}
+              onClick={() => handleTrackClick(track.external_urls.spotify)}
+            >
+              {track.name}
+            </div>
+          ))}
+          <img 
+            src="/Arrow.svg" 
+            alt="Custom Image" 
+            className={`${styles.customImage} ${isHovered ? styles.flipped : ''}`}
+          />
         </div>
       </div>
+      
+      <button className={styles.goBackButton} onClick={() => router.back()}>Go Back</button>
     </div>
   );
 }
